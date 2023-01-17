@@ -54,7 +54,7 @@ if __name__=="__main__":
         data = "./DataSets/regression/Salary_Data.csv"
     else:
         pass
-    
+    st.session_state['data'] = data
     df = pd.read_csv(data)
     if st.button('Enter',key='1'):
         st.header("DataSet")
@@ -79,10 +79,10 @@ if __name__=="__main__":
             col1, col2 = st.columns(2)
 
             with col1:
-                st.header("Labels")
+                st.header("Features")
                 st.dataframe(x)
             with col2:
-                st.header("Features")
+                st.header("Labels")
                 st.dataframe(y)
             st.session_state['steps'] ='2'
         else:
@@ -91,6 +91,8 @@ if __name__=="__main__":
     st.header("Step 3: Train Test Split")
     ts = st.select_slider('Test size',options=['0.1', '0.2', '0.4', '0.4'])
     rs = st.number_input("Enter random number :",min_value=1, max_value=100,step=None)
+    st.session_state['ts']=ts
+    st.session_state['rs']=rs
     if st.button('Enter',key='4'):
         if st.session_state['steps'] =='2':
             x_train,x_test,y_train,y_test = train_test_split(x,y,test_size=float(ts),random_state=int(rs))
@@ -131,39 +133,4 @@ if __name__=="__main__":
             st.session_state['steps'] ='4'
         else:
             st.error("you skipped previous steps")
-    st.header("Step 5:Create Interface for your machine learning model")
-    if st.button('Enter',key='7'):
-        try:
-            if st.session_state['steps'] =='4':
-                with st.spinner('Creating interface for your model...'):
-                    time.sleep(5)
-                if 'Salary_Data' in data:
-                    YearsExperience = int(st.number_input("Enter Years Experience : "))
-                    arr = [YearsExperience]
-                    if st.button("Submit"):
-                        pred = model(arr)
-                        st.write(f"The prediciton is :{pred}")
-                elif 'placement' in data:
-                    cgpa = int(st.number_input("Enter cgpa :"))
-                    placement_exam_marks = int(st.number_input("Enter placement exam marks :"))
-                    arr = [cgpa,placement_exam_marks]
-                    nparr = np.asarray(arr)
-                    x_train,x_test,y_train,y_test = train_test_split(x,y,test_size=float(ts),random_state=int(rs))
-                    lor = LogisticRegression()
-                    lor.fit(x_train,y_train)
-                    if st.button("Submit"):
-                        pred = lor.predict(nparr)
-                        st.write(f"The prediciton is :{pred}")
-                else:
-                    tv = int(st.number_input("Enter tv : "))
-                    Radio = int(st.number_input("Enter Radio : "))
-                    Newspaper = int(st.number_input("Enter Newspaper :"))
-                    arr = [tv,Radio,Newspaper]
-                    if st.button("Submit"):
-                        pred = model(arr)
-                        st.write(f"The prediciton is :{pred}")
-            else:
-                st.error("you skipped previous steps")
-        except Exception:
-               st.error("you skipped previous steps")         
-
+    
