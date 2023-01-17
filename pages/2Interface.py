@@ -67,7 +67,7 @@ if __name__=="__main__":
             lor = LogisticRegression()
             lor.fit(x_train,y_train)
             if st.button("Submit"):
-                pred = lor.predict(nparr)
+                pred = lor.predict([nparr])
                 st.header(f"The prediciton is :{pred[0]}")
         else:
             tv = int(st.number_input("Enter tv : "))
